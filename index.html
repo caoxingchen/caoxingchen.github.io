@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII码表 (0-127)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Consolas", "Monaco", monospace;
+        }
+        body {
+            padding: 20px;
+            background-color: #f5f5f5;
+            transition: background-color 0.3s ease;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+        /* 邀请码区域样式 */
+        .invite-container {
+            max-width: 1000px;
+            margin: 0 auto 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+        #invite-input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 200px;
+            outline: none;
+        }
+        #invite-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        #invite-btn:hover {
+            background-color: #45a049;
+        }
+        .invite-tips {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin: -10px auto 15px;
+            display: none; /* 隐藏默认邀请码提示 */
+        }
+        .invite-error {
+            text-align: center;
+            color: #dc3545;
+            font-size: 14px;
+            display: none;
+            margin: 5px auto;
+        }
+        /* 高配版功能区（默认隐藏） */
+        .pro-features {
+            display: none;
+        }
+        /* 搜索框样式 */
+        .search-container {
+            max-width: 1000px;
+            margin: 0 auto 20px;
+            display: flex;
+            gap: 10px;
+        }
+        #search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+        }
+        #search-input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 3px rgba(76, 175, 80, 0.3);
+        }
+        .search-tips {
+            max-width: 1000px;
+            margin: -10px auto 15px;
+            color: #666;
+            font-size: 14px;
+            padding-left: 5px;
+        }
+        /* 自定义设置区 */
+        .custom-setting {
+            max-width: 1000px;
+            margin: 0 auto 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 10px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .custom-setting label {
+            color: #333;
+            font-size: 14px;
+        }
+        #layout-select, #theme-select {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+        /* 表格样式 - 基础样式统一 */
+        .ascii-table {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .ascii-table th, .ascii-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .ascii-table th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        .ascii-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .ascii-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        /* 搜索匹配行高亮 */
+        .highlight {
+            background-color: #fff3cd !important;
+        }
+        .control-char {
+            color: #666;
+            font-style: italic;
+        }
+        .char-cell {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        /* 无结果提示 */
+        #no-result {
+            max-width: 1000px;
+            margin: 20px auto;
+            text-align: center;
+            color: #dc3545;
+            font-size: 16px;
+            display: none;
+        }
+        /* 精简版隐藏列 - 修复解锁后显示问题 */
+        .hide-in-basic {
+            display: none !important;
+        }
+        /* 解锁后显示列的样式 */
+        .pro-unlocked .hide-in-basic {
+            display: table-cell !important;
+        }
+        /* 网格布局修复 - 核心修复点 */
+        .layout-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+            border-collapse: separate !important;
+            border: none !important;
+            gap: 10px !important;
+        }
+        .layout-grid thead {
+            display: none !important; /* 网格布局隐藏表头 */
+        }
+        .layout-grid tbody {
+            display: contents !important;
+        }
+        .layout-grid tr {
+            display: flex !important;
+            flex-direction: column !important;
+            border: 1px solid #ddd !important;
+            margin: 0 !important;
+            border-radius: 8px !important;
+            padding: 15px !important;
+            background-color: white !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+        }
+        .layout-grid tr:nth-child(even) {
+            background-color: white !important;
+        }
+        .layout-grid tr:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1) !important;
+        }
+        .layout-grid td {
+            border: none !important;
+            padding: 8px 0 !important;
+            text-align: left !important;
+            font-size: 14px !important;
+        }
+        .layout-grid td:before {
+            content: attr(data-label) ": ";
+            font-weight: bold;
+            color: #4CAF50;
+            margin-right: 5px;
+        }
+        /* 暗黑主题样式 - 调亮字体，适配网格布局 */
+        .theme-dark {
+            background-color: #1a1a1a !important;
+            color: #ffffff !important; /* 从#f5f5f5调亮为#ffffff */
+        }
+        .theme-dark h1 {
+            color: #ffffff !important; /* 标题字体调亮 */
+        }
+        .theme-dark .ascii-table {
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
+        .theme-dark .ascii-table th {
+            background-color: #3d3d3d !important;
+            color: #ffffff !important; /* 表头字体调亮 */
+        }
+        .theme-dark .ascii-table tr {
+            background-color: #2d2d2d !important;
+            color: #f8f8f8 !important; /* 表格行字体调亮 */
+        }
+        .theme-dark .ascii-table tr:nth-child(even) {
+            background-color: #2d2d2d !important;
+        }
+        .theme-dark .ascii-table tr:hover {
+            background-color: #383838 !important;
+        }
+        .theme-dark .ascii-table td {
+            color: #f8f8f8 !important; /* 单元格字体调亮 */
+        }
+        .theme-dark .highlight {
+            background-color: #4a4a2f !important;
+            color: #ffffff !important; /* 高亮行字体调亮 */
+        }
+        .theme-dark .custom-setting {
+            background-color: #2d2d2d !important;
+            color: #ffffff !important; /* 设置区字体调亮 */
+        }
+        .theme-dark .custom-setting label {
+            color: #ffffff !important; /* 设置区标签字体调亮 */
+        }
+        .theme-dark #search-input, .theme-dark #invite-input {
+            background-color: #333 !important;
+            color: #ffffff !important; /* 输入框字体调亮 */
+            border-color: #555 !important;
+        }
+        .theme-dark .layout-grid tr {
+            background-color: #2d2d2d !important;
+            color: #f8f8f8 !important; /* 网格卡片字体调亮 */
+        }
+        .theme-dark .layout-grid td:before {
+            color: #81c784 !important; /* 网格标签字体调亮 */
+        }
+        .theme-dark .control-char {
+            color: #e0e0e0 !important; /* 控制字符字体调亮 */
+        }
+        .theme-dark .char-cell {
+            color: #ffffff !important; /* 字符单元格字体调亮 */
+        }
+        .theme-dark #no-result, .theme-dark .invite-error {
+            color: #ff6b6b !important; /* 提示文字调亮 */
+        }
+    </style>
+</head>
+<body>
+    <h1>ASCII码表 (0-127)</h1>
+    
+    <!-- 邀请码验证区域 -->
+    <div class="invite-container">
+        <input type="text" id="invite-input" placeholder="输入邀请码解锁高配版">
+        <button id="invite-btn">解锁</button>
+    </div>
+    <div class="invite-error" id="invite-error">邀请码错误，请重试！</div>
+    <div class="invite-tips">默认邀请码：<code>ASCII888</code>（可自行修改代码中的邀请码）</div>
+    
+    <!-- 高配版功能区（默认隐藏） -->
+    <div class="pro-features">
+        <!-- 自定义设置区 -->
+        <div class="custom-setting">
+            <label>布局切换：</label>
+            <select id="layout-select">
+                <option value="table">表格布局（默认）</option>
+                <option value="grid">网格布局</option>
+            </select>
+            
+            <label>主题切换：</label>
+            <select id="theme-select">
+                <option value="light">浅色主题（默认）</option>
+                <option value="dark">暗黑主题</option>
+            </select>
+        </div>
+        
+        <!-- 搜索框 -->
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="搜索：十进制(如65)、十六进制(如41/0x41)、字符(如A)、说明(如空格/Backspace)">
+        </div>
+        <div class="search-tips">
+            支持搜索：十进制数字（0-127）、十六进制（00-7F/0x00-0x7F）、字符（如a、@）、中英文说明（如响铃、Bell）
+        </div>
+        
+        <div id="no-result">未找到匹配的ASCII码信息</div>
+    </div>
+    
+    <table class="ascii-table" id="ascii-table">
+        <thead>
+            <tr>
+                <th>十进制 (Dec)</th>
+                <th>十六进制 (Hex)</th>
+                <th>字符 (Char)</th>
+                <th class="hide-in-basic">说明 (英文)</th>
+                <th class="hide-in-basic">说明 (中文)</th>
+            </tr>
+        </thead>
+        <tbody id="ascii-body">
+            <!-- 由JS动态生成内容 -->
+        </tbody>
+    </table>
+
+    <script>
+        // 核心配置
+        const CONFIG = {
+            // 自定义邀请码（改为小写woaizhongguo）
+            INVITE_CODE: "woaizhongguo",
+            // 默认主题
+            DEFAULT_THEME: "light",
+            // 默认布局
+            DEFAULT_LAYOUT: "table"
+        };
+
+        // 定义0-32和127号控制字符的说明
+        const controlChars = {
+            0: { en: "Null", zh: "空字符" },
+            1: { en: "Start of Heading", zh: "标题开始" },
+            2: { en: "Start of Text", zh: "正文开始" },
+            3: { en: "End of Text", zh: "正文结束" },
+            4: { en: "End of Transmission", zh: "传输结束" },
+            5: { en: "Enquiry", zh: "询问字符" },
+            6: { en: "Acknowledge", zh: "确认字符" },
+            7: { en: "Bell", zh: "响铃" },
+            8: { en: "Backspace", zh: "退格" },
+            9: { en: "Horizontal Tab", zh: "水平制表符" },
+            10: { en: "Line Feed", zh: "换行" },
+            11: { en: "Vertical Tab", zh: "垂直制表符" },
+            12: { en: "Form Feed", zh: "换页" },
+            13: { en: "Carriage Return", zh: "回车" },
+            14: { en: "Shift Out", zh: "移出" },
+            15: { en: "Shift In", zh: "移入" },
+            16: { en: "Data Link Escape", zh: "数据链路转义" },
+            17: { en: "Device Control 1", zh: "设备控制1" },
+            18: { en: "Device Control 2", zh: "设备控制2" },
+            19: { en: "Device Control 3", zh: "设备控制3" },
+            20: { en: "Device Control 4", zh: "设备控制4" },
+            21: { en: "Negative Acknowledge", zh: "否定确认" },
+            22: { en: "Synchronous Idle", zh: "同步空闲" },
+            23: { en: "End of Transmit Block", zh: "传输块结束" },
+            24: { en: "Cancel", zh: "取消" },
+            25: { en: "End of Medium", zh: "介质结束" },
+            26: { en: "Substitute", zh: "替换" },
+            27: { en: "Escape", zh: "转义" },
+            28: { en: "File Separator", zh: "文件分隔符" },
+            29: { en: "Group Separator", zh: "分组分隔符" },
+            30: { en: "Record Separator", zh: "记录分隔符" },
+            31: { en: "Unit Separator", zh: "单元分隔符" },
+            32: { en: "Space", zh: "空格" },
+            127: { en: "Delete", zh: "删除" }
+        };
+
+        // 获取DOM元素
+        const inviteInput = document.getElementById('invite-input');
+        const inviteBtn = document.getElementById('invite-btn');
+        const inviteError = document.getElementById('invite-error');
+        const proFeatures = document.querySelector('.pro-features');
+        const asciiTable = document.getElementById('ascii-table');
+        const tableBody = document.getElementById('ascii-body');
+        const searchInput = document.getElementById('search-input');
+        const noResult = document.getElementById('no-result');
+        const layoutSelect = document.getElementById('layout-select');
+        const themeSelect = document.getElementById('theme-select');
+        const body = document.body;
+        
+        let asciiRows = []; // 存储所有行数据
+        let isProUnlocked = false; // 是否解锁高配版
+
+        // 生成ASCII码表 - 修复网格布局的data-label属性
+        function generateASCIITable() {
+            tableBody.innerHTML = '';
+            asciiRows = [];
+            
+            for (let dec = 0; dec <= 127; dec++) {
+                const hex = dec.toString(16).padStart(2, '0').toUpperCase();
+                let char = '';
+                let enDesc = '';
+                let zhDesc = '';
+
+                if (dec in controlChars) {
+                    char = '—';
+                    enDesc = controlChars[dec].en;
+                    zhDesc = controlChars[dec].zh;
+                } else {
+                    char = String.fromCharCode(dec);
+                    enDesc = "Printable Character";
+                    zhDesc = "可打印字符";
+                }
+
+                // 存储行数据
+                asciiRows.push({
+                    dec: dec.toString(),
+                    hex: hex,
+                    char: char,
+                    enDesc: enDesc,
+                    zhDesc: zhDesc
+                });
+
+                // 创建表格行 - 为每个td添加data-label属性，适配网格布局
+                const row = document.createElement('tr');
+                row.dataset.dec = dec;
+                row.innerHTML = `
+                    <td data-label="十进制">${dec}</td>
+                    <td data-label="十六进制">0x${hex}</td>
+                    <td data-label="字符">${dec in controlChars ? `<span class="control-char">${char}</span>` : `<span class="char-cell">${char}</span>`}</td>
+                    <td data-label="英文说明" class="hide-in-basic">${enDesc}</td>
+                    <td data-label="中文说明" class="hide-in-basic">${zhDesc}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+
+        // 邀请码验证 - 支持大小写不敏感
+        function checkInviteCode() {
+            const inputCode = inviteInput.value.trim().toLowerCase(); // 转为小写验证
+            if (inputCode === CONFIG.INVITE_CODE.toLowerCase()) { // 配置的邀请码也转小写
+                // 解锁高配版
+                isProUnlocked = true;
+                inviteError.style.display = 'none';
+                
+                // 显示高配功能
+                proFeatures.style.display = 'block';
+                // 添加解锁标记类，控制列显示
+                asciiTable.classList.add('pro-unlocked');
+                // 隐藏邀请码区域
+                document.querySelector('.invite-container').style.display = 'none';
+                document.querySelector('.invite-tips').style.display = 'none';
+                
+                // 初始化默认布局和主题
+                setLayout(CONFIG.DEFAULT_LAYOUT);
+                setTheme(CONFIG.DEFAULT_THEME);
+            } else {
+                inviteError.style.display = 'block';
+                setTimeout(() => {
+                    inviteError.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        // 搜索功能（高配版）
+        function searchASCII() {
+            if (!isProUnlocked) return;
+            
+            const searchText = searchInput.value.trim().toLowerCase();
+            const allRows = document.querySelectorAll('#ascii-body tr');
+            let hasMatch = false;
+
+            allRows.forEach(row => row.classList.remove('highlight'));
+
+            // 空搜索时显示所有行
+            if (!searchText) {
+                allRows.forEach(row => row.style.display = '');
+                noResult.style.display = 'none';
+                return;
+            }
+
+            // 遍历匹配
+            asciiRows.forEach((rowData, index) => {
+                const row = allRows[index];
+                const searchHex = searchText.replace('0x', '');
+                const isMatch = 
+                    rowData.dec.includes(searchText) ||
+                    rowData.hex.toLowerCase() === searchHex ||
+                    rowData.char.toLowerCase() === searchText ||
+                    rowData.enDesc.toLowerCase().includes(searchText) ||
+                    rowData.zhDesc.toLowerCase().includes(searchText);
+
+                if (isMatch) {
+                    row.style.display = '';
+                    row.classList.add('highlight');
+                    hasMatch = true;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            noResult.style.display = hasMatch ? 'none' : 'block';
+        }
+
+        // 布局切换 - 修复网格布局样式适配
+        function setLayout(layout) {
+            if (layout === 'grid') {
+                asciiTable.classList.add('layout-grid');
+            } else {
+                asciiTable.classList.remove('layout-grid');
+            }
+        }
+
+        // 主题切换
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                body.classList.add('theme-dark');
+            } else {
+                body.classList.remove('theme-dark');
+            }
+        }
+
+        // 初始化
+        generateASCIITable();
+
+        // 绑定事件
+        // 邀请码验证
+        inviteBtn.addEventListener('click', checkInviteCode);
+        inviteInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') checkInviteCode();
+        });
+
+        // 搜索事件（高配版）
+        searchInput.addEventListener('input', searchASCII);
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') searchASCII();
+        });
+
+        // 布局切换
+        layoutSelect.addEventListener('change', (e) => {
+            setLayout(e.target.value);
+        });
+
+        // 主题切换
+        themeSelect.addEventListener('change', (e) => {
+            setTheme(e.target.value);
+        });
+    </script>
+</body>
+</html>
