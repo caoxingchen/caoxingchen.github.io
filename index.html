@@ -231,7 +231,7 @@
         ];
 
         const class2List = [
-            "余泽佑"
+            "余泽佑","余泽中", "余泽北", "余泽南", "余泽西", "余泽东", "余泽下", "余泽上", "余泽左","余泽右"
         ];
 
         function selectClass(classNum) {
@@ -253,14 +253,25 @@
             const resultArea = document.getElementById(`resultArea${classNum}`);
             const nameList = classNum === 1? class1List : class2List;
             
-            let drawCount = parseInt(countInput.value);
+            // 获取输入的原始数值
+            const inputValue = countInput.value.trim();
+            const drawCount = Number(inputValue);
 
+            // 1. 判断是否为小数（核心新增逻辑）
+            if (!Number.isInteger(drawCount) &&!isNaN(drawCount)) {
+                alert("请输入整数！抽取人数不支持小数");
+                countInput.value = 1;
+                return;
+            }
+
+            // 2. 判断无效数字/小于1
             if (isNaN(drawCount) || drawCount < 1) {
                 alert("请输入有效的抽取人数（至少1人）");
                 countInput.value = 1;
                 return;
             }
 
+            // 3. 判断超过总人数
             if (drawCount > nameList.length) {
                 alert(`抽取人数不能超过总人数（共${nameList.length}人）`);
                 countInput.value = nameList.length;
