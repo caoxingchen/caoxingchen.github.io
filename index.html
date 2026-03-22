@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>强基部点名系统</title>
+    <title>点名系统</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,7 @@
 
         body {
             min-height: 100vh;
-            background-color: blue;
+            background-color: red;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -180,14 +180,14 @@
 </head>
 <body>
     <div class="main-container" id="mainPage">
-        <h1 class="main-title">强基部贯通班点名系统</h1>
-        <button class="class-btn" onclick="selectClass(1)">强基部贯通一班</button>
-        <button class="class-btn" onclick="selectClass(2)">强基部贯通二班</button>
+        <h1 class="main-title">点名系统</h1>
+        <button class="class-btn" onclick="select(1)">物理名人</button>
+        <button class="class-btn" onclick="select(2)">二班</button>
     </div>
 
-    <div class="container" id="class1Page">
+    <div class="container" id="page1">
         <button class="btn back-btn" onclick="backToMain()">返回主页</button>
-        <h1 class="title">强基部贯通一班点名</h1>
+        <h1 class="title">物理名人抽取</h1>
         <p class="subtitle">随机、自动抽取</p>
         
         <div class="input-group">
@@ -220,14 +220,7 @@
 
     <script>
         const class1List = [
-            "迟月铭", "杜航宇", "范润泽", "高悦", "郭滨豪", "郭恒羽", "韩博宇", "黄烨轩",
-            "黄梓露", "姜霁洋", "姜依晗", "蒋旭", "李军达", "李科震", "李雯", "李汶轩",
-            "李玉熙", "刘兴航", "刘雨泽", "刘昭杰", "刘昭彤", "鲁丰博", "马浚鑫", "马晓宇",
-            "马梓朕", "潘新予", "潘一帆", "庞振轩", "石宇宸", "司一萱", "宋昊阳", "孙纬彬",
-            "王浩圳", "王烁恺", "王天佑", "王玥璋", "王岳彦", "王政永", "王子豪", "徐鹤轩",
-            "徐萌", "徐熙哲", "颜子越", "杨程翔", "杨明轩", "张红业", "张钧强", "张峻溪",
-            "张明宇", "张念隆", "张子谦", "赵浩程", "郑淏文", "郑岩", "朱文沪", "诸葛烨",
-            "祝祥伟"
+            "艾萨克·牛顿", "阿尔伯特·爱因斯坦", "迈克尔·法拉第", "詹姆斯·克拉克·麦克斯韦", "马克斯·普朗克", "尼尔斯·亨利克·戴维·玻尔", "伽利略·伽利雷", "保罗·狄拉克", "理查德·费曼", "埃尔温·薛定谔", "王晗"
         ];
 
         const class2List = [
@@ -240,10 +233,10 @@
             "张麦琪", "张燕云", "张一顺", "张艺泽", "张雨辰", "郑景元", "郑永玏", "周子墨"
         ];
 
-        function selectClass(classNum) {
+        function select(number) {
             document.getElementById('mainPage').style.display = 'none';
-            if(classNum === 1){
-                document.getElementById('class1Page').style.display = 'block';
+            if(number === 1){
+                document.getElementById('page1').style.display = 'block';
             }else{
                 document.getElementById('class2Page').style.display = 'block';
             }
@@ -254,10 +247,10 @@
             document.getElementById('mainPage').style.display = 'block';
         }
 
-        function startDraw(classNum) {
-            const countInput = document.getElementById(`countInput${classNum}`);
-            const resultArea = document.getElementById(`resultArea${classNum}`);
-            const nameList = classNum === 1? class1List : class2List;
+        function startDraw(number) {
+            const countInput = document.getElementById(`countInput${number}`);
+            const resultArea = document.getElementById(`resultArea${number}`);
+            const nameList = number === 1? class1List : class2List;
             
             // 获取输入的原始数值
             const inputValue = countInput.value.trim();
@@ -311,9 +304,9 @@
             });
         }
 
-        function resetDraw(classNum) {
-            document.getElementById(`resultArea${classNum}`).innerHTML = '<span class="empty-tip">点击上方按钮开始抽取</span>';
-            document.getElementById(`countInput${classNum}`).value = 1;
+        function resetDraw(number) {
+            document.getElementById(`resultArea${number}`).innerHTML = '<span class="empty-tip">点击上方按钮开始抽取</span>';
+            document.getElementById(`countInput${number}`).value = 1;
         }
     </script>
 </body>
